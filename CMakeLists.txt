@@ -4,4 +4,4 @@ project(snake)
 add_subdirectory(lib)
 add_executable(${PROJECT_NAME} main.cpp)
 
-target_link_libraries(${PROJECT_NAME} board snake-char)
+target_link_libraries(${PROJECT_NAME} board snake-char ball)

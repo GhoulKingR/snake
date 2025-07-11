@@ -51,7 +51,7 @@ void Board::render() {
     }
 }
 
-void Board::mainloop(Board* ctx, Snake* snake) {
+void Board::mainloop(Board* ctx, Snake* snake, Ball* ball) {
     using namespace std::chrono_literals;
     while(!terminate_flag) {
         // prepare the base board
@@ -63,6 +63,7 @@ void Board::mainloop(Board* ctx, Snake* snake) {
 
         // update the buffer
         snake->drawTo(ctx);
+        ball->drawTo(ctx);
 
         // render the screeen
         std::cout << "\x1b[" << BOARD_HEIGHT << "F";
@@ -94,6 +95,8 @@ void Board::initDisplay() {
 }
 
 void keyboard_thread(Snake* snake) {
+    using namespace std::chrono_literals;
+
     char ch;
     while((ch = getchar()) != EOF) {
         switch (ch) {
@@ -117,6 +120,7 @@ void keyboard_thread(Snake* snake) {
             default:
                 break;
         }
+        std::this_thread::sleep_for(100ms);
     }
 }
 
@@ -126,12 +130,11 @@ void Board::initKeyboard() {
     kt.detach();
 }
 
-Board::Board(Snake* snake) {
-    this->snake = snake;
-
+Board::Board(Snake* snake, Ball* ball): snake(snake), ball(ball) {
     clear();
     drawBorders();
     snake->drawTo(this);
+    ball->drawTo(this);
 
     initDisplay();
     initKeyboard();
@@ -139,7 +142,7 @@ Board::Board(Snake* snake) {
 }
 
 void Board::start() {
-    std::thread t(mainloop, this, snake);
+    std::thread t(mainloop, this, snake, ball);
     threads.push_back(&t);
     t.join();
 }
