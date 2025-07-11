@@ -1,6 +1,7 @@
 # Snake game
 
 A snake game that runs in the terminal.
+![gameplay](./assets/gameplay.gif)
 
 ## Requirements
 
