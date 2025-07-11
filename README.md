@@ -33,3 +33,7 @@ make
 ```bash
 ./snake
 ```
+
+# Controlling the snake
+
+In this game you can control the snake's direction using the `WASD` key-binding or, if you want vim key-bindings `hjkl`.
