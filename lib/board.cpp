@@ -1,0 +1,138 @@
+#include <atomic>
+#include <csignal>
+#include <cstdio>
+#include <iostream>
+#include <thread>
+#include <termios.h>
+#include <unistd.h>
+
+#include "../headers/board.hpp"
+
+std::atomic<bool> terminate_flag(false);
+
+void Board::drawBorders() {
+    for (int i = 0; i < BOARD_HEIGHT; i++) {
+        auto row = buffer[i];
+        row[0] = '|';
+        row[BOARD_WIDTH - 1] = '|';
+    }
+
+    auto first = buffer[0], last = buffer[BOARD_HEIGHT - 1];
+    memset(first, '-', BOARD_WIDTH * sizeof(char));
+    memset(last, '-', BOARD_WIDTH * sizeof(char));
+
+    bounds.top = 1;
+    bounds.left = 1;
+    bounds.bottom = BOARD_HEIGHT - 2;
+    bounds.right = BOARD_WIDTH - 2;
+}
+
+void Board::clear(){
+    for (int i = 0; i < BOARD_HEIGHT; i++) {
+        auto row = buffer[i];
+        memset(row, ' ', BOARD_WIDTH * sizeof(char));
+    }
+    
+}
+
+void Board::render() {
+    for (int i = 0; i < BOARD_HEIGHT; i++) {
+        for (int j = 0; j < BOARD_WIDTH; j++) {
+            auto c = buffer[i][j];
+            std::cout << c;
+        }
+        std::cout << '\n';
+    }
+}
+
+void Board::mainloop(Board* ctx, Snake* snake) {
+    using namespace std::chrono_literals;
+    while(!terminate_flag) {
+        // prepare the base board
+        ctx->clear();
+        ctx->drawBorders();
+
+        // update objects for next frame
+        snake->next();
+
+        // update the buffer
+        snake->drawTo(ctx);
+
+        // render the screeen
+        std::cout << "\x1b[" << BOARD_HEIGHT << "F";
+        ctx->render();
+        std::this_thread::sleep_for(100ms);
+    }
+}
+
+termios oldt;
+
+void handle_exit(int code) {
+    terminate_flag = true;
+    std::cout << "Gracefully shutting down..." << std::endl;
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+}
+
+void Board::initDisplay() {
+    tcgetattr(STDIN_FILENO, &oldt);
+    termios newt = oldt;
+    newt.c_lflag &= (~ECHO & ~ICANON);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    signal(SIGINT, handle_exit);
+}
+
+void keyboard_thread(Snake* snake) {
+    char ch;
+    while((ch = getchar()) != EOF) {
+        switch (ch) {
+            case 'w':
+            case 'k':
+                snake->changeDirection(0, -1);
+                break;
+            case 's':
+            case 'j':
+                snake->changeDirection(0, 1);
+                break;
+            case 'a':
+            case 'h':
+                snake->changeDirection(-1, 0);
+                break;
+            case 'd':
+            case 'l':
+                snake->changeDirection(1, 0);
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+void Board::initKeyboard() {
+    std::thread kt(keyboard_thread, snake);
+    threads.push_back(&kt);
+    kt.detach();
+}
+
+Board::Board(Snake* snake) {
+    this->snake = snake;
+
+    clear();
+    drawBorders();
+    snake->drawTo(this);
+
+    initDisplay();
+    initKeyboard();
+    render();
+}
+
+void Board::start() {
+    std::thread t(mainloop, this, snake);
+    threads.push_back(&t);
+    t.join();
+}
+
+void Board::write_char(char c, int x, int y) {
+    buffer[y][x] = c;
+}
