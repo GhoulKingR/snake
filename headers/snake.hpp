@@ -5,6 +5,8 @@
 
 #include "board.hpp"
 
+struct vec { int x, y; };
+
 class Board;
 class Snake {
     int length = 1;
@@ -18,7 +20,9 @@ public:
     void drawTo(Board* board);
     void next();
     void changeDirection(int dx, int dy);
+    void add_length();
 
+    vec get_head();
     int score();
     std::string to_string();
 };

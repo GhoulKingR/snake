@@ -40,3 +40,11 @@ void Ball::randomly_place() {
     x = distx(gen);
     y = disty(gen);
 }
+
+void Ball::checkCollision(Snake* snake) {
+    auto head = snake->get_head();
+    if (head.x == x && head.y == y) {
+        snake->add_length();
+        randomly_place();
+    }
+}

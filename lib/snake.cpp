@@ -28,6 +28,17 @@ void Snake::drawTo(Board* board) {
     }
 }
 
+vec Snake::get_head() {
+    vec new_vec;
+    new_vec.x = head.x;
+    new_vec.y = head.y;
+    return new_vec;
+}
+
+void Snake::add_length() {
+    length++;
+}
+
 void Snake::changeDirection(int dx, int dy) {
     if (dx != 0 && dy == 0 && head.dx == 0 && head.dy != 0) {
         head.dx = dx;
