@@ -19,9 +19,10 @@ git clone https://github.com/GhoulKingR/snake
 ```bash
 cd snake
 ```
-- Create a new `build` folder:
+- Create a new `build` folder and **cd** into it:
 ```bash
 mkdir build
+cd build
 ```
 - Compile the project:
 ```bash
