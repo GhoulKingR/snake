@@ -7,7 +7,7 @@
 
 class Board;
 class Snake {
-    int length = 10;
+    int length = 1;
 
     struct pos { int x, y, dx, dy; } head;
     std::deque<pos> body;
@@ -19,5 +19,6 @@ public:
     void next();
     void changeDirection(int dx, int dy);
 
+    int score();
     std::string to_string();
 };

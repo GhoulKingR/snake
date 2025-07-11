@@ -56,6 +56,10 @@ void Snake::next() {
     }
 }
 
+int Snake::score() {
+    return length - 1;
+}
+
 std::string Snake::to_string() {
     std::stringstream ss;
     ss << "Snake( x: " << head.x << ", y: " << head.y << ", dx: " << head.dx << ", dy: " << head.dy << " )";

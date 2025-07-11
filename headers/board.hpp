@@ -6,6 +6,9 @@
 #define BOARD_WIDTH 100
 #define BOARD_HEIGHT 50
 
+#define SCORE_POS_X 110
+#define SCORE_POS_Y 20
+
 class Ball {
     int x, y;
 };

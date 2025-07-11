@@ -36,6 +36,12 @@ void Board::clear(){
 }
 
 void Board::render() {
+    for (int i = 0; i < SCORE_POS_Y; i++)
+        std::cout << "\n";
+    std::cout << "\x1b[" << SCORE_POS_X << "C";
+    std::cout << "Score: " << snake->score();
+    std::cout << "\x1b[" << SCORE_POS_Y << "F";
+
     for (int i = 0; i < BOARD_HEIGHT; i++) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
             auto c = buffer[i][j];
@@ -69,11 +75,16 @@ termios oldt;
 
 void handle_exit(int code) {
     terminate_flag = true;
-    std::cout << "Gracefully shutting down..." << std::endl;
+    std::cout << "Gracefully shutting down...\n";
+    std::cout << "\x1b[?25h";
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 }
 
 void Board::initDisplay() {
+    // hide cursor
+    std::cout << "\x1b[?25l";
+
+    // disable line buffering and user input
     tcgetattr(STDIN_FILENO, &oldt);
     termios newt = oldt;
     newt.c_lflag &= (~ECHO & ~ICANON);
