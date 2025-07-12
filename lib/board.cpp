@@ -61,6 +61,9 @@ void Board::mainloop(Board* ctx, Snake* snake, Ball* ball) {
         // update objects for next frame
         snake->next();
         ball->checkCollision(snake);
+        
+        if (snake->selfCollide())
+            break;
 
         // update the buffer
         snake->drawTo(ctx);

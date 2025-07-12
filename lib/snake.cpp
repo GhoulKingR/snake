@@ -28,6 +28,14 @@ void Snake::drawTo(Board* board) {
     }
 }
 
+bool Snake::selfCollide() {
+    for (auto part : body) {
+        if (part == head)
+            return true;
+    }
+    return false;
+}
+
 vec Snake::get_head() {
     vec new_vec;
     new_vec.x = head.x;
