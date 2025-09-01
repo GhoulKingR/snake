@@ -38,6 +38,8 @@ void* keyboard_listener(void* arg) {
         switch (c) {
             case 'W':
             case 'w':
+            case 'K':
+            case 'k':
                 if (snake->head[DIR_Y] == 0) {
                     snake->head[DIR_X] = 0;
                     snake->head[DIR_Y] = -1;
@@ -45,6 +47,8 @@ void* keyboard_listener(void* arg) {
                 break;
             case 'A':
             case 'a':
+            case 'H':
+            case 'h':
                 if (snake->head[DIR_X] == 0) {
                     snake->head[DIR_X] = -1;
                     snake->head[DIR_Y] = 0;
@@ -52,6 +56,8 @@ void* keyboard_listener(void* arg) {
                 break;
             case 'S':
             case 's':
+            case 'J':
+            case 'j':
                 if (snake->head[DIR_Y] == 0) {
                     snake->head[DIR_X] = 0;
                     snake->head[DIR_Y] = 1;
@@ -59,6 +65,8 @@ void* keyboard_listener(void* arg) {
                 break;
             case 'D':
             case 'd':
+            case 'L':
+            case 'l':
                 if (snake->head[DIR_X] == 0) {
                     snake->head[DIR_X] = 1;
                     snake->head[DIR_Y] = 0;
