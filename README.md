@@ -5,7 +5,7 @@ A snake game that runs in the terminal.
 
 ## Requirements
 
-- C++ 20+ compiler
+- A C compiler (GCC or Clang)
 - CMake 4.0+
 - make
 
